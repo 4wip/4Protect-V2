@@ -1,11 +1,11 @@
-const {
+import {
 	EmbedBuilder,
 	ButtonBuilder,
 	ActionRowBuilder,
 	ButtonStyle,
 	ComponentType
-} = require('discord.js');
-const config = require('../config.json')
+} from 'discord.js';
+import config from "../config.json" with { type: 'json' }
 
 const WIDTH = 10;
 const HEIGHT = 8;
@@ -185,4 +185,4 @@ class SnakeGame {
 	}
 }
 
-module.exports = SnakeGame;
+export default SnakeGame;

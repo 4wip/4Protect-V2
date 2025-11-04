@@ -1,8 +1,8 @@
-const Discord = require('discord.js');
-const config = require('../config.json');
-const sendLog = require('./sendlog');
+import Discord from "discord.js"
+import config from "../config.json" with { type: 'json' }
+import sendLog from "./sendlog.js";
 
-module.exports = {
+export default {
 	name: 'messageUpdate',
 	async execute(oldMessage, newMessage, bot) {
 		if (oldMessage.partial || newMessage.partial) return;

@@ -1,4 +1,4 @@
-const db = require('../Events/loadDatabase');
+import db from "./loadDatabase.js";
 
 const types = {
 	modlog: '📁・mod-logs',
@@ -29,4 +29,4 @@ async function sendLog(guild, embed, type = 'modlog') {
 	});
 }
 
-module.exports = sendLog;
+export default sendLog;

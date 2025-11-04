@@ -1,7 +1,7 @@
-const Discord = require('discord.js');
-const db = require('../Events/loadDatabase');
-const config = require('../config.json');
-const sendLog = require('./sendlog');
+import Discord from "discord.js"
+import config from "../config.json" with { type: 'json' }
+import sendLog from "./sendlog.js";
+import db from "./loadDatabase.js";
 
 const bypass = async (userId) => {
 	if (config.owners && config.owners.includes(userId)) return true;
@@ -15,7 +15,7 @@ const bypass = async (userId) => {
 	});
 };
 
-module.exports = {
+export default {
 	name: 'channelCreate',
 	async execute(channel) {
 		if (!channel.guild) return;

@@ -1,14 +1,14 @@
-const fs = require('fs');
+import fs from "fs"
 
-module.exports = (bot) => {
+export default async (bot) => {
 	const commandFiles = fs.readdirSync('./Commands/').filter((file) => file.endsWith('.js'));
 
 	for (const file of commandFiles) {
-		const props = require(`../Commands/${file}`);
-		bot.commands.set(props.help.name, props);
+		const props = (await import(`../Commands/${file}`))?.command;
+		bot.commands.set(props.command.name, props);
 
-		if (props.help.aliases && Array.isArray(props.help.aliases)) {
-			props.help.aliases.forEach((alias) => {
+		if (props.aliases && Array.isArray(props.aliases)) {
+			props.aliases.forEach((alias) => {
 				bot.commands.set(alias, props);
 			});
 		}
@@ -21,11 +21,11 @@ module.exports = (bot) => {
 		const subCommandFiles = fs.readdirSync(`./Commands/${folder}/`).filter((file) => file.endsWith('.js'));
 
 		for (const file of subCommandFiles) {
-			const props = require(`../Commands/${folder}/${file}`);
-			bot.commands.set(props.help.name, props);
+			const props = (await import(`../Commands/${folder}/${file}`))?.command;
+			bot.commands.set(props.name, props);
 
-			if (props.help.aliases && Array.isArray(props.help.aliases)) {
-				props.help.aliases.forEach((alias) => {
+			if (props.aliases && Array.isArray(props.aliases)) {
+				props.aliases.forEach((alias) => {
 					bot.commands.set(alias, props);
 				});
 			}

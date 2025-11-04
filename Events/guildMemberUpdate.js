@@ -1,7 +1,7 @@
-const { AuditLogEvent, EmbedBuilder } = require('discord.js');
-const db = require('../Events/loadDatabase');
-const sendLog = require('./sendlog.js');
-const config = require('../config.json');
+import { AuditLogEvent, EmbedBuilder } from 'discord.js';
+import sendLog from "./sendlog.js";
+import config from "../config.json" with { type: 'json' }
+import db from "./loadDatabase.js";
 
 const bypass = async (userId) => {
 	if (config.owners && config.owners.includes(userId)) return true;
@@ -16,7 +16,7 @@ const bypass = async (userId) => {
 };
 
 
-module.exports = {
+export default {
 	name: 'guildMemberUpdate',
 	async execute(oldMember, newMember) {
 		if (oldMember.roles.cache.size === newMember.roles.cache.size) return;

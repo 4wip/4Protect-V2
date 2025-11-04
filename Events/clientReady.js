@@ -1,6 +1,6 @@
-const { ActivityType } = require('discord.js');
+import { ActivityType } from "discord.js";
 
-module.exports = {
+export default {
 	name: 'clientReady',
 	async execute(bot) {
 		await bot.application.commands.set(bot.arrayOfSlashCommands);

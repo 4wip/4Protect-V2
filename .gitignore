@@ -2,3 +2,7 @@ node_modules
 database.sqlite3
 package-lock.json
 bun.lock
+config.json
+
+# Ignore all .DS_Store into macOS
+*.DS_Store

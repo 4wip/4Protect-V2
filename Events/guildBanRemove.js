@@ -1,8 +1,8 @@
-const { EmbedBuilder, AuditLogEvent } = require('discord.js');
-const sendLog = require('./sendlog');
-const config = require('../config.json');
+import { EmbedBuilder, AuditLogEvent } from 'discord.js';
+import sendLog from './sendlog.js';
+import config from "../config.json" with { type: 'json' }
 
-module.exports = {
+export default {
 	name: 'guildBanRemove',
 	async execute(ban) {
 		const { guild, user } = ban;

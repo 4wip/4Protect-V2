@@ -1,7 +1,7 @@
-const { EmbedBuilder, ApplicationCommandOptionType } = require('discord.js');
-const db = require('../Events/loadDatabase');
+import { EmbedBuilder, ApplicationCommandOptionType } from 'discord.js';
+import db from '../Events/loadDatabase.js';
 
-module.exports = {
+export const command = {
 	name: 'vouch',
 	description: 'Permet de vouch',
 	dm_permission: false,

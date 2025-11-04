@@ -1,7 +1,7 @@
-const { AuditLogEvent } = require('discord.js');
-const db = require('../Events/loadDatabase');
-const sendLog = require('./sendlog.js');
-const config = require('../config.json');
+import { AuditLogEvent, EmbedBuilder } from 'discord.js';
+import sendLog from "./sendlog.js";
+import config from "../config.json" with { type: 'json' }
+import db from "./loadDatabase.js";
 
 const bypass = async (userId) => {
 	if (config.owners && config.owners.includes(userId)) return true;
@@ -15,7 +15,7 @@ const bypass = async (userId) => {
 	});
 };
 
-module.exports = {
+export default {
 	name: 'guildUpdate',
 	async execute(oldGuild, newGuild) {
 
@@ -34,7 +34,7 @@ module.exports = {
 							const executor = entry.executor;
 							const member = await newGuild.members.fetch(executor.id).catch(() => null);
 
-							const embed = new (require('discord.js')).EmbedBuilder()
+							const embed = new EmbedBuilder()
 								.setColor(config.color)
 								.setAuthor({ name: executor.tag, iconURL: executor.displayAvatarURL() })
 								.setDescription(`<@${executor.id}> a modifié le vanity`)
@@ -99,7 +99,7 @@ module.exports = {
 					const member = await newGuild.members.fetch(executor.id).catch(() => null);
 					if (!member) return;
 
-					const embed = new (require('discord.js')).EmbedBuilder()
+					const embed = new EmbedBuilder()
 						.setColor(config.color)
 						.setAuthor({ name: executor.tag, iconURL: executor.displayAvatarURL() })
 						.setDescription(`<@${executor.id}> a modifié des paramètres du serveur.`)

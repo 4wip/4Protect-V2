@@ -16,4 +16,4 @@ const anticrashHandler = (bot) => {
 	process.on('exit', (code) => { console.log(`Processus terminé avec le code ${code}`); });
 };
 
-module.exports = anticrashHandler;
+export default anticrashHandler;

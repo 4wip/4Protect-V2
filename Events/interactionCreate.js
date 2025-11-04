@@ -1,10 +1,8 @@
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require('discord.js');
-const db = require('../Events/loadDatabase');
-const ms = require('ms');
-const config = require('../config.json');
-const Discord = require('discord.js');
+import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, MessageFlags } from 'discord.js';
+import Discord from "discord.js"
+import db from "./loadDatabase.js";
 
-module.exports = {
+export default {
 	name: 'interactionCreate',
 	async execute(interaction, bot, config) {
 

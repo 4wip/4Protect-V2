@@ -1,8 +1,7 @@
-const db = require('./loadDatabase');
-const { AuditLogEvent } = require('discord.js');
-const Discord = require('discord.js');
-const sendLog = require('./sendlog.js');
-const config = require('../config.json');
+import Discord, { AuditLogEvent } from "discord.js"
+import sendLog from "./sendlog.js";
+import db from "./loadDatabase.js";
+import config from "../config.json" with { type: 'json' }
 
 const bypass = async (userId) => {
 	if (config.owners && config.owners.includes(userId)) return true;
@@ -17,7 +16,7 @@ const bypass = async (userId) => {
 };
 
 
-module.exports = {
+export default {
 	name: 'webhooksUpdate',
 	async execute(channel) {
 		if (!channel.guild) return;

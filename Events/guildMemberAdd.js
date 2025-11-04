@@ -1,7 +1,7 @@
-const db = require('./loadDatabase');
-const { ActivityType } = require('discord.js');
+import { ActivityType } from 'discord.js';
+import db from './loadDatabase.js';
 
-module.exports = {
+export default {
 	name: 'guildMemberAdd',
 	async execute(member) {
 

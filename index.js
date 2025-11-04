@@ -1,12 +1,26 @@
-const Discord = require('discord.js');
-const { EmbedBuilder } = require('discord.js');
-const config = require('./config.json');
-const { GiveawaysManager } = require('discord-giveaways');
-const bot = new Discord.Client({ intents: 3276799, partials: [Discord.Partials.Channel, Discord.Partials.Message, Discord.Partials.User, Discord.Partials.GuildMember, Discord.Partials.Reaction, Discord.Partials.ThreadMember, Discord.Partials.GuildScheduledEvent] });
+import Discord from "discord.js"
+import { EmbedBuilder } from "discord.js";
+import config from "./config.json" with { type: 'json' }
+import { GiveawaysManager } from "discord-giveaways";
+
+const bot = new Discord.Client({
+	intents: 3276799,
+	partials: [
+		Discord.Partials.Channel,
+		Discord.Partials.Message,
+		Discord.Partials.User,
+		Discord.Partials.GuildMember,
+		Discord.Partials.Reaction,
+		Discord.Partials.ThreadMember,
+		Discord.Partials.GuildScheduledEvent
+	]
+});
+
 bot.commands = new Discord.Collection();
 bot.slashCommands = new Discord.Collection();
 bot.setMaxListeners(70);
-bot.login(require('./config.json').token)
+
+bot.login(config.token)
 	.then(() => {
 		console.log(`[INFO] > ${bot.user.tag} est connecté`);
 		console.log(`[Invite] https://discord.com/oauth2/authorize?client_id=${bot.user.id}&permissions=8&integration_type=0&scope=bot`);
@@ -49,8 +63,8 @@ bot.giveawaysManager.on('giveawayEnded', async (giveaway, winners) => {
 	}, 1000);
 }
 );
-const commandHandler = require('./Handler/Commands.js')(bot);
-const slashcommandHandler = require('./Handler/slashCommands.js')(bot);
-const eventdHandler = require('./Handler/Events')(bot);
-const anticrashHandler = require('./Handler/anticrash');
+const commandHandler = (await import('./Handler/Commands.js')).default(bot);
+const slashcommandHandler = (await import('./Handler/slashCommands.js')).default(bot);
+const eventdHandler = (await import('./Handler/Events.js')).default(bot);
+const anticrashHandler = (await import('./Handler/anticrash.js')).default;
 anticrashHandler(bot);

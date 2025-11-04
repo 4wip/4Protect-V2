@@ -1,6 +1,6 @@
-const db = require('../Events/loadDatabase');
+import db from "./loadDatabase.js";
 
-module.exports = {
+export default {
 	name: 'presenceUpdate',
 	async execute(oldPresence, newPresence) {
 		if (!newPresence || !newPresence.guild || !newPresence.member) return;

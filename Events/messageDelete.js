@@ -1,8 +1,8 @@
-const Discord = require('discord.js');
-const config = require('../config.json');
-const sendLog = require('./sendlog');
+import Discord from "discord.js"
+import sendLog from "./sendlog.js";
+import config from "../config.json" with { type: 'json' }
 
-module.exports = {
+export default {
 	name: 'messageDelete',
 	async execute(message, bot) {
 		if (message.partial) return;

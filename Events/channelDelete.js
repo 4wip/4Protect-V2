@@ -1,7 +1,7 @@
-const db = require('../Events/loadDatabase');
-const { ChannelType, PermissionFlagsBits, AuditLogEvent, EmbedBuilder } = require('discord.js');
-const sendLog = require('./sendlog');
-const config = require('../config.json');
+import { ChannelType, PermissionFlagsBits, AuditLogEvent, EmbedBuilder } from 'discord.js';
+import sendLog from "./sendlog.js";
+import config from "../config.json" with { type: 'json' }
+import db from "./loadDatabase.js";
 
 const bypass = async (userId) => {
 	if (config.owners && config.owners.includes(userId)) return true;
@@ -15,7 +15,7 @@ const bypass = async (userId) => {
 	});
 };
 
-module.exports = {
+export default {
 	name: 'channelDelete',
 	async execute(channel) {
 		if (!channel || !channel.guild) return;
