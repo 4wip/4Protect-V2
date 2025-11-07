@@ -30,8 +30,8 @@ node index.js
 
 4. Dashboard
 ```bash
-vous devez mettre dans le config.json l'id du bot, et le secret du bot qui se trouve dans [developer portal](https://discord.com/developers/applications) -> OAuth2 -> client secret
-pour avoir acces au dashboard ensuite vous devez aller dans -> [developer portal](https://discord.com/developers/applications) -> OAuth2 -> puis dans Redirects mettre http://localhost:5000/callback
+vous devez mettre dans le config.json l'id du bot, et le secret du bot qui se trouve dans developer portal -> OAuth2 -> client secret
+pour avoir acces au dashboard ensuite vous devez aller dans -> developer portal -> OAuth2 -> puis dans Redirects mettre http://localhost:5000/callback
 ensuite vous pouvez allez sur l'url http://localhost:5000/ et vous avez votre dashboard.
 ```
 
