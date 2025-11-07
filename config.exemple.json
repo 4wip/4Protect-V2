@@ -1,9 +1,6 @@
 {
 	"token": "",
-	"owners": [
-		"",
-		""
-	],
+	"owners": ["", ""],
 	"prefix": "=",
 	"color": "#6495ed",
 	"titre": "Support",
@@ -17,5 +14,7 @@
 	"cdescription": "Clique sur le bouton ci-dessous pour te vérifier",
 	"ccolor": "#6495ED",
 	"cimage": "https://s4.anilist.co/file/anilistcdn/user/banner/b6882459-PAnDeNP93aAW.jpg",
-	"cemoji": "​<Gbutterfly1:1247866358645919745>​"
+	"cemoji": "​<Gbutterfly1:1247866358645919745>​",
+        "DISCORD_CLIENT_ID": "",
+        "DISCORD_CLIENT_SECRET": "" 
 }
