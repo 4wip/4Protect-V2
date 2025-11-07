@@ -28,6 +28,13 @@ npm install
 node index.js
 ```
 
+4. Dashboard
+```bash
+vous devez mettre dans le config.json l'id du bot, et le secret du bot qui se trouve dans [developer portal](https://discord.com/developers/applications) -> OAuth2 -> client secret
+pour avoir acces au dashboard ensuite vous devez aller dans -> [developer portal](https://discord.com/developers/applications) -> OAuth2 -> puis dans Redirects mettre http://localhost:5000/callback
+ensuite vous pouvez allez sur l'url http://localhost:5000/ et vous avez votre dashboard.
+```
+
 ## Vidéo
 https://vidmoly.net/embed-1dojt45ftg4o.html (Installation Complète)
 
@@ -40,3 +47,5 @@ Les contributions sont acceptées faîtes un pull requests/issues
 ## Crédit
 - 4wip (Discord/([Github](https://github.com/4wip))
 - [Serveur Discord](https://discord.gg/26KgQQxMJ5)
+
+- miiloww_. (Discord/([Github](https://github.com/miiloww))
