@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= guild.name %> - Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <a href="/dashboard" class="back-link">← Retour</a>
+                <h1><%= guild.name %></h1>
+            </div>
+            <div class="user-info">
+                <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="Avatar" class="user-avatar">
+                <span><strong><%= user.username %></strong></span>
+                <a href="/logout" class="btn btn-small btn-secondary">Déconnexion</a>
+            </div>
+        </header>
+
+        <div class="guild-layout">
+            <!-- Menu latéral -->
+            <div class="sidebar">
+                <nav class="sidebar-nav">
+                    <button onclick="showPage('logs')" class="nav-btn active" data-page="logs">
+                        Logs
+                    </button>
+                    <button onclick="showPage('antiraid')" class="nav-btn" data-page="antiraid">
+                        Anti-Raid
+                    </button>
+                    <button onclick="showPage('tempvoc')" class="nav-btn" data-page="tempvoc">
+                        Tempvoc
+                    </button>
+                    <button onclick="showPage('transcript')" class="nav-btn" data-page="transcript">
+                        Transcripts
+                    </button>
+                    <button onclick="showPage('ticket-creator')" class="nav-btn" data-page="ticket-creator">
+                        Créateur de Ticket
+                    </button>
+                    <button onclick="showPage('info')" class="nav-btn" data-page="info">
+                        Informations
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Zone de contenu -->
+            <div class="content-area">
+                <!-- Page Logs -->
+                <div id="page-logs" class="config-page active">
+                    <div class="config-section">
+                        <h2>Configuration des Logs</h2>
+                        <p class="subtitle">Configurez les salons de logs pour différents événements</p>
+
+                        <div class="log-select-item">
+                            <label for="modlog">Modération</label>
+                            <small>Logs des actions de modération (bans, kicks, etc.)</small>
+                            <select id="modlog" data-log-type="📁・moderation-logs">
+                                <option value="">Aucun salon sélectionné</option>
+                            </select>
+                        </div>
+
+                        <div class="log-select-item">
+                            <label for="messagelog">Messages</label>
+                            <small>Logs des messages supprimés et modifiés</small>
+                            <select id="messagelog" data-log-type="📁・message-logs">
+                                <option value="">Aucun salon sélectionné</option>
+                            </select>
+                        </div>
+
+                        <div class="log-select-item">
+                            <label for="voicelog">Vocal</label>
+                            <small>Logs des événements vocaux (join, leave, mute, etc.)</small>
+                            <select id="voicelog" data-log-type="📁・voice-logs">
+                                <option value="">Aucun salon sélectionné</option>
+                            </select>
+                        </div>
+
+                        <div class="log-select-item">
+                            <label for="raidlog">Anti-Raid</label>
+                            <small>Logs des protections anti-raid déclenchées</small>
+                            <select id="raidlog" data-log-type="📁・raid-logs">
+                                <option value="">Aucun salon sélectionné</option>
+                            </select>
+                        </div>
+
+                        <div class="log-select-item">
+                            <label for="rolelog">Rôles</label>
+                            <small>Logs des changements de rôles</small>
+                            <select id="rolelog" data-log-type="📁・role-logs">
+                                <option value="">Aucun salon sélectionné</option>
+                            </select>
+                        </div>
+
+                        <div class="log-select-item">
+                            <label for="boostlog">Boosts</label>
+                            <small>Logs des boosts du serveur</small>
+                            <select id="boostlog" data-log-type="📁・boost-logs">
+                                <option value="">Aucun salon sélectionné</option>
+                            </select>
+                        </div>
+
+                        <div class="log-select-item">
+                            <label for="ticketlog">Tickets</label>
+                            <small>Logs du système de tickets</small>
+                            <select id="ticketlog" data-log-type="📁・ticket-logs">
+                                <option value="">Aucun salon sélectionné</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary btn-save" onclick="saveLogs()">Enregistrer les modifications</button>
+                    </div>
+                </div>
+
+                <!-- Page Anti-Raid -->
+                <div id="page-antiraid" class="config-page">
+                    <div class="config-section">
+                        <h2>Protection Anti-Raid</h2>
+                        <p class="subtitle">Activez ou désactivez les modules de protection</p>
+
+                        <div class="antiraid-options">
+                            <div class="antiraid-item">
+                                <div class="antiraid-info">
+                                    <h4>Anti-Link</h4>
+                                    <p>Bloque les liens Discord et autres</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" data-antiraid="antilink">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="antiraid-item">
+                                <div class="antiraid-info">
+                                    <h4>Anti-Spam</h4>
+                                    <p>Protection contre le spam de messages</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" data-antiraid="antispam">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="antiraid-item">
+                                <div class="antiraid-info">
+                                    <h4>Anti-Bot</h4>
+                                    <p>Kick automatique des bots</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" data-antiraid="antibot">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="antiraid-item">
+                                <div class="antiraid-info">
+                                    <h4>Anti-Webhook</h4>
+                                    <p>Surveille les webhooks</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" data-antiraid="antiwebhook">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="antiraid-item">
+                                <div class="antiraid-info">
+                                    <h4>Anti-Channel</h4>
+                                    <p>Empêche la création/suppression de salons</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" data-antiraid="antichannel">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="antiraid-item">
+                                <div class="antiraid-info">
+                                    <h4>Anti-Ban</h4>
+                                    <p>Protection contre les bans massifs</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" data-antiraid="antiban">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="antiraid-item">
+                                <div class="antiraid-info">
+                                    <h4>Anti-Role</h4>
+                                    <p>Empêche les modifications de rôles</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" data-antiraid="antirole">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="antiraid-item">
+                                <div class="antiraid-info">
+                                    <h4>Anti-Update</h4>
+                                    <p>Surveille les mises à jour du serveur</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" data-antiraid="antiupdate">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="antiraid-item">
+                                <div class="antiraid-info">
+                                    <h4>Anti-Everyone</h4>
+                                    <p>Bloque les mentions @everyone</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" data-antiraid="antieveryone">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="antiraid-item">
+                                <div class="antiraid-info">
+                                    <h4>Anti-Vanity</h4>
+                                    <p>Protection de l'URL personnalisée</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" data-antiraid="antivanity">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-save" onclick="saveAntiraid()" style="margin-top: 30px;">Enregistrer les modifications</button>
+                    </div>
+                </div>
+
+                <!-- Page Tempvoc -->
+                <div id="page-tempvoc" class="config-page">
+                    <div class="config-section">
+                        <h2>Salons Vocaux Temporaires</h2>
+                        <p class="subtitle">Configuration des salons vocaux temporaires</p>
+
+                        <div class="log-select-item">
+                            <label for="tempvoc-channel">Salon vocal Tempvoc</label>
+                            <small>Sélectionnez le salon vocal qui servira à créer des salons temporaires</small>
+                            <select id="tempvoc-channel">
+                                <option value="">Aucun salon sélectionné</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary btn-save" onclick="saveTempvoc()" style="margin-top: 20px;">Enregistrer les modifications</button>
+                    </div>
+                </div>
+
+                <!-- Page Transcript -->
+                <div id="page-transcript" class="config-page">
+                    <div class="config-section">
+                        <h2>Transcripts de Tickets</h2>
+                        <p class="subtitle">Historique des tickets fermés</p>
+
+                        <div id="transcript-list" class="transcript-list">
+                            <p class="text-center" style="color: #888;">Chargement des transcripts...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Créateur de Ticket -->
+                <div id="page-ticket-creator" class="config-page">
+                    <div class="config-section">
+                        <h2>Créateur de Ticket Personnalisé</h2>
+                        <p class="subtitle">Créez un embed de ticket entièrement personnalisé</p>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px;">
+                            <!-- Formulaire -->
+                            <div>
+                                <div class="log-select-item">
+                                    <label for="ticket-title">Titre de l'embed</label>
+                                    <input type="text" id="ticket-title" placeholder="Ex: Support" style="width: 100%; padding: 12px; background: var(--background); border: 2px solid var(--surface-light); border-radius: 6px; color: var(--text);">
+                                </div>
+
+                                <div class="log-select-item">
+                                    <label for="ticket-description">Description</label>
+                                    <textarea id="ticket-description" placeholder="Ex: Cliquez sur le bouton pour ouvrir un ticket" rows="4" style="width: 100%; padding: 12px; background: var(--background); border: 2px solid var(--surface-light); border-radius: 6px; color: var(--text); resize: vertical;"></textarea>
+                                </div>
+
+                                <div class="log-select-item">
+                                    <label for="ticket-color">Couleur de l'embed</label>
+                                    <input type="color" id="ticket-color" value="#6495ed" style="width: 100%; height: 50px; cursor: pointer; border: 2px solid var(--surface-light); border-radius: 6px; background: var(--background);">
+                                </div>
+
+                                <div class="log-select-item">
+                                    <label>Options du menu déroulant</label>
+                                    <small style="display: block; margin-bottom: 10px;">Ajoutez jusqu'à 25 options</small>
+                                    <div id="ticket-options-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px;">
+                                        <div class="ticket-option-item" style="display: flex; gap: 10px; align-items: center;">
+                                            <input type="text" class="ticket-option-input" placeholder="Ex: Support technique" value="Support" style="flex: 1; padding: 10px; background: var(--background); border: 2px solid var(--surface-light); border-radius: 6px; color: var(--text);">
+                                            <button onclick="removeTicketOption(this)" style="padding: 10px 15px; background: var(--danger); color: white; border: none; border-radius: 6px; cursor: pointer;">✕</button>
+                                        </div>
+                                    </div>
+                                    <button onclick="addTicketOption()" class="btn btn-secondary" style="width: 100%; margin-top: 10px;">+ Ajouter une option</button>
+                                </div>
+
+                                <div class="log-select-item">
+                                    <label for="ticket-channel">Salon de destination</label>
+                                    <select id="ticket-channel">
+                                        <option value="">Sélectionnez un salon</option>
+                                    </select>
+                                </div>
+
+                                <button class="btn btn-primary btn-save" onclick="sendCustomTicket()">Envoyer le ticket</button>
+                            </div>
+
+                            <!-- Preview -->
+                            <div>
+                                <label style="display: block; margin-bottom: 10px; color: var(--text); font-weight: 600;">Aperçu en temps réel</label>
+                                <div id="embed-preview" style="background: var(--surface-light); padding: 20px; border-radius: 8px; border-left: 4px solid #6495ed;">
+                                    <div id="preview-title" style="font-size: 18px; font-weight: bold; color: var(--text); margin-bottom: 10px;">Support</div>
+                                    <div id="preview-description" style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 15px;">Cliquez sur le bouton pour ouvrir un ticket</div>
+                                    <div id="preview-select-menu" style="background: var(--background); padding: 12px; border-radius: 6px; border: 2px solid var(--surface-light);">
+                                        <div style="color: var(--text-secondary); font-size: 14px; margin-bottom: 8px;">📋 Menu déroulant</div>
+                                        <div id="preview-options" style="display: flex; flex-direction: column; gap: 5px;">
+                                            <div style="color: var(--text); font-size: 13px; padding: 5px; background: var(--surface); border-radius: 4px;">• Support</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <small style="color: var(--text-secondary); display: block; margin-top: 10px;">L'aperçu se met à jour en temps réel</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Informations -->
+                <div id="page-info" class="config-page">
+                    <div class="config-section">
+                        <h2>Informations</h2>
+                        <p class="subtitle">Informations sur le serveur et le bot</p>
+                        
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <strong>ID du Serveur</strong>
+                                <p><code><%= guild.id %></code></p>
+                            </div>
+                            <div class="info-card">
+                                <strong>Nom du Serveur</strong>
+                                <p><%= guild.name %></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>4Protect V2 © 2024 - Powered by 4wip</p>
+        </footer>
+    </div>
+
+    <script>
+        const guildId = '<%= guild.id %>';
+        const logsChannels = <%- JSON.stringify(logsChannels) %>;
+        let channels = [];
+
+        // Navigation entre les pages
+        function showPage(pageName) {
+            document.querySelectorAll('.config-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById('page-' + pageName).classList.add('active');
+            document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
+        }
+
+        // Charger les salons au démarrage
+        async function loadChannels() {
+            try {
+                const response = await fetch(`/api/guild/${guildId}/channels`);
+                channels = await response.json();
+                populateChannelSelects();
+            } catch (error) {
+                console.error('Erreur lors du chargement des salons:', error);
+            }
+        }
+
+        // Remplir les select avec les salons
+        function populateChannelSelects() {
+            const selects = document.querySelectorAll('select[data-log-type]');
+            selects.forEach(select => {
+                const logType = select.getAttribute('data-log-type');
+                const currentValue = logsChannels[logType] || '';
+                
+                select.innerHTML = '<option value="">Aucun salon sélectionné</option>';
+                
+                channels.forEach(channel => {
+                    const option = document.createElement('option');
+                    option.value = channel.id;
+                    option.textContent = `# ${channel.name}`;
+                    if (channel.id === currentValue) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+            });
+
+            // Remplir le select tempvoc avec les salons vocaux
+            populateTempvocSelect();
+            
+            // Remplir le select pour le créateur de ticket
+            populateTicketChannelSelect();
+        }
+
+        // Remplir le select tempvoc avec les salons vocaux uniquement
+        async function populateTempvocSelect() {
+            try {
+                const response = await fetch(`/api/guild/${guildId}/voice-channels`);
+                const voiceChannels = await response.json();
+                
+                const tempvocResponse = await fetch(`/api/guild/${guildId}/tempvoc`);
+                const tempvocData = await tempvocResponse.json();
+                const currentTempvoc = tempvocData.channelId || '';
+
+                const select = document.getElementById('tempvoc-channel');
+                select.innerHTML = '<option value="">Aucun salon sélectionné</option>';
+                
+                voiceChannels.forEach(channel => {
+                    const option = document.createElement('option');
+                    option.value = channel.id;
+                    option.textContent = channel.name;
+                    if (channel.id === currentTempvoc) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement des salons vocaux:', error);
+            }
+        }
+
+        // Charger l'état des protections anti-raid
+        async function loadAntiraidStatus() {
+            try {
+                const response = await fetch(`/api/guild/${guildId}/antiraid`);
+                const data = await response.json();
+                
+                document.querySelectorAll('input[data-antiraid]').forEach(input => {
+                    const type = input.getAttribute('data-antiraid');
+                    input.checked = data[type] || false;
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement de l\'anti-raid:', error);
+            }
+        }
+
+        // Sauvegarder les logs
+        async function saveLogs() {
+            const logInputs = document.querySelectorAll('select[data-log-type]');
+            const updates = [];
+
+            for (const select of logInputs) {
+                const logType = select.getAttribute('data-log-type');
+                const channelId = select.value;
+
+                updates.push(
+                    fetch(`/api/guild/${guildId}/logs`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            logType: logType,
+                            channelId: channelId || null
+                        })
+                    })
+                );
+            }
+
+            try {
+                await Promise.all(updates);
+                alert('Configuration sauvegardée avec succès !');
+            } catch (error) {
+                alert('Erreur lors de la sauvegarde. Veuillez réessayer.');
+                console.error(error);
+            }
+        }
+
+        // Sauvegarder l'anti-raid
+        async function saveAntiraid() {
+            const inputs = document.querySelectorAll('input[data-antiraid]');
+            const config = {};
+
+            inputs.forEach(input => {
+                const type = input.getAttribute('data-antiraid');
+                config[type] = input.checked;
+            });
+
+            try {
+                const response = await fetch(`/api/guild/${guildId}/antiraid`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(config)
+                });
+
+                if (response.ok) {
+                    alert('Configuration anti-raid sauvegardée avec succès !');
+                } else {
+                    throw new Error('Erreur serveur');
+                }
+            } catch (error) {
+                alert('Erreur lors de la sauvegarde. Veuillez réessayer.');
+                console.error(error);
+            }
+        }
+
+        // Sauvegarder tempvoc
+        async function saveTempvoc() {
+            const channelId = document.getElementById('tempvoc-channel').value;
+
+            try {
+                const response = await fetch(`/api/guild/${guildId}/tempvoc`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ channelId: channelId || null })
+                });
+
+                if (response.ok) {
+                    alert('Configuration tempvoc sauvegardée avec succès !');
+                } else {
+                    throw new Error('Erreur serveur');
+                }
+            } catch (error) {
+                alert('Erreur lors de la sauvegarde. Veuillez réessayer.');
+                console.error(error);
+            }
+        }
+
+        // Charger les transcripts
+        async function loadTranscripts() {
+            try {
+                const response = await fetch(`/api/guild/${guildId}/transcripts`);
+                const transcripts = await response.json();
+                
+                const transcriptList = document.getElementById('transcript-list');
+                
+                if (transcripts.length === 0) {
+                    transcriptList.innerHTML = '<p class="text-center" style="color: #888;">Aucun transcript disponible pour le moment.</p>';
+                    return;
+                }
+
+                let html = '<div class="transcript-grid">';
+                transcripts.forEach(transcript => {
+                    const date = new Date(transcript.created_at).toLocaleString('fr-FR');
+                    html += `
+                        <div class="transcript-card">
+                            <div class="transcript-header">
+                                <h4>${transcript.ticket_name}</h4>
+                                <small>${date}</small>
+                                <p>Fermé par: ${transcript.closed_by_username}</p>
+                            </div>
+                            <a href="/transcript/${transcript.id}" target="_blank" class="btn btn-small btn-secondary">Voir le transcript</a>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                
+                transcriptList.innerHTML = html;
+            } catch (error) {
+                console.error('Erreur lors du chargement des transcripts:', error);
+                document.getElementById('transcript-list').innerHTML = '<p class="text-center" style="color: #888;">Erreur lors du chargement des transcripts.</p>';
+            }
+        }
+
+        // Ajouter une option au ticket
+        function addTicketOption() {
+            const optionsList = document.getElementById('ticket-options-list');
+            const optionsCount = optionsList.children.length;
+            
+            if (optionsCount >= 25) {
+                alert('Vous pouvez ajouter maximum 25 options');
+                return;
+            }
+
+            const optionItem = document.createElement('div');
+            optionItem.className = 'ticket-option-item';
+            optionItem.style.cssText = 'display: flex; gap: 10px; align-items: center;';
+            optionItem.innerHTML = `
+                <input type="text" class="ticket-option-input" placeholder="Ex: Support technique" style="flex: 1; padding: 10px; background: var(--background); border: 2px solid var(--surface-light); border-radius: 6px; color: var(--text);">
+                <button onclick="removeTicketOption(this)" style="padding: 10px 15px; background: var(--danger); color: white; border: none; border-radius: 6px; cursor: pointer;">✕</button>
+            `;
+            
+            optionsList.appendChild(optionItem);
+            
+            const input = optionItem.querySelector('.ticket-option-input');
+            input.addEventListener('input', updateTicketPreview);
+            
+            updateTicketPreview();
+        }
+
+        // Supprimer une option du ticket
+        function removeTicketOption(button) {
+            const optionsList = document.getElementById('ticket-options-list');
+            
+            if (optionsList.children.length <= 1) {
+                alert('Vous devez avoir au moins une option');
+                return;
+            }
+            
+            button.parentElement.remove();
+            updateTicketPreview();
+        }
+
+        // Preview en temps réel pour le créateur de ticket
+        function updateTicketPreview() {
+            const title = document.getElementById('ticket-title').value || 'Support';
+            const description = document.getElementById('ticket-description').value || 'Cliquez sur le bouton pour ouvrir un ticket';
+            const color = document.getElementById('ticket-color').value;
+
+            document.getElementById('preview-title').textContent = title;
+            document.getElementById('preview-description').textContent = description;
+            document.getElementById('embed-preview').style.borderLeftColor = color;
+
+            const optionInputs = document.querySelectorAll('.ticket-option-input');
+            const previewOptions = document.getElementById('preview-options');
+            previewOptions.innerHTML = '';
+
+            optionInputs.forEach(input => {
+                const optionText = input.value.trim() || 'Option';
+                const optionDiv = document.createElement('div');
+                optionDiv.style.cssText = 'color: var(--text); font-size: 13px; padding: 5px; background: var(--surface); border-radius: 4px;';
+                optionDiv.textContent = `• ${optionText}`;
+                previewOptions.appendChild(optionDiv);
+            });
+        }
+
+        // Envoyer le ticket personnalisé
+        async function sendCustomTicket() {
+            const title = document.getElementById('ticket-title').value;
+            const description = document.getElementById('ticket-description').value;
+            const color = document.getElementById('ticket-color').value;
+            const channelId = document.getElementById('ticket-channel').value;
+
+            const optionInputs = document.querySelectorAll('.ticket-option-input');
+            const options = Array.from(optionInputs)
+                .map(input => input.value.trim())
+                .filter(value => value.length > 0);
+
+            if (!channelId) {
+                alert('Veuillez sélectionner un salon de destination');
+                return;
+            }
+
+            if (!title && !description) {
+                alert('Veuillez remplir au moins le titre ou la description');
+                return;
+            }
+
+            if (options.length === 0) {
+                alert('Veuillez ajouter au moins une option au menu déroulant');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/guild/${guildId}/send-ticket`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        description: description,
+                        color: color,
+                        channelId: channelId,
+                        options: options
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Ticket envoyé avec succès !');
+                    document.getElementById('ticket-title').value = '';
+                    document.getElementById('ticket-description').value = '';
+                    document.getElementById('ticket-color').value = '#6495ed';
+                    document.getElementById('ticket-channel').value = '';
+                    
+                    const optionsList = document.getElementById('ticket-options-list');
+                    optionsList.innerHTML = `
+                        <div class="ticket-option-item" style="display: flex; gap: 10px; align-items: center;">
+                            <input type="text" class="ticket-option-input" placeholder="Ex: Support technique" value="Support" style="flex: 1; padding: 10px; background: var(--background); border: 2px solid var(--surface-light); border-radius: 6px; color: var(--text);">
+                            <button onclick="removeTicketOption(this)" style="padding: 10px 15px; background: var(--danger); color: white; border: none; border-radius: 6px; cursor: pointer;">✕</button>
+                        </div>
+                    `;
+                    
+                    const input = optionsList.querySelector('.ticket-option-input');
+                    input.addEventListener('input', updateTicketPreview);
+                    
+                    updateTicketPreview();
+                } else {
+                    const error = await response.json();
+                    alert('Erreur lors de l\'envoi: ' + (error.error || 'Erreur inconnue'));
+                }
+            } catch (error) {
+                alert('Erreur lors de l\'envoi. Veuillez réessayer.');
+                console.error(error);
+            }
+        }
+
+        // Remplir le select des salons pour le créateur de ticket
+        function populateTicketChannelSelect() {
+            const select = document.getElementById('ticket-channel');
+            if (!select) return;
+
+            select.innerHTML = '<option value="">Sélectionnez un salon</option>';
+            
+            channels.forEach(channel => {
+                const option = document.createElement('option');
+                option.value = channel.id;
+                option.textContent = `# ${channel.name}`;
+                select.appendChild(option);
+            });
+        }
+
+        // Initialisation
+        window.addEventListener('DOMContentLoaded', () => {
+            loadChannels();
+            loadAntiraidStatus();
+            loadTranscripts();
+
+            // Event listeners pour la preview en temps réel
+            const titleInput = document.getElementById('ticket-title');
+            const descInput = document.getElementById('ticket-description');
+            const colorInput = document.getElementById('ticket-color');
+
+            if (titleInput) titleInput.addEventListener('input', updateTicketPreview);
+            if (descInput) descInput.addEventListener('input', updateTicketPreview);
+            if (colorInput) colorInput.addEventListener('input', updateTicketPreview);
+
+            document.querySelectorAll('.ticket-option-input').forEach(input => {
+                input.addEventListener('input', updateTicketPreview);
+            });
+        });
+    </script>
+</body>
+</html>

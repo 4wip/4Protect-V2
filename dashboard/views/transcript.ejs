@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= transcript.ticket_name %> - Transcript</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .transcript-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .transcript-header {
+            background: var(--surface-light);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .transcript-header h1 {
+            color: var(--text);
+            margin-bottom: 15px;
+        }
+
+        .transcript-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .meta-item {
+            color: var(--text-secondary);
+        }
+
+        .meta-item strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .messages-container {
+            background: var(--surface-light);
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .message {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--surface);
+        }
+
+        .message:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .message-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .message-author img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .message-author-name {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .message-timestamp {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-left: auto;
+        }
+
+        .message-content {
+            color: var(--text);
+            padding-left: 42px;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="transcript-container">
+        <a href="/dashboard" class="back-link">← Retour au dashboard</a>
+        
+        <div class="transcript-header">
+            <h1><%= transcript.ticket_name %></h1>
+            
+            <div class="transcript-meta">
+                <div class="meta-item">
+                    <strong>Fermé par</strong>
+                    <%= transcript.closed_by_username %>
+                </div>
+                <div class="meta-item">
+                    <strong>Date de fermeture</strong>
+                    <%= new Date(transcript.created_at).toLocaleString('fr-FR') %>
+                </div>
+            </div>
+        </div>
+
+        <div class="messages-container">
+            <h2 style="color: var(--text); margin-bottom: 20px;">Messages</h2>
+            
+            <% 
+            let messages = [];
+            try {
+                messages = JSON.parse(transcript.messages);
+            } catch (e) {
+                messages = [];
+            }
+            %>
+
+            <% if (messages.length === 0) { %>
+                <p style="color: var(--text-secondary); text-align: center;">Aucun message dans ce transcript.</p>
+            <% } else { %>
+                <% messages.forEach(msg => { %>
+                    <div class="message">
+                        <div class="message-author">
+                            <img src="https://cdn.discordapp.com/embed/avatars/<%= (parseInt(msg.author.id) % 6) %>.png" alt="Avatar">
+                            <span class="message-author-name">
+                                <%= msg.author.username %>
+                                <% if (msg.author.bot) { %>
+                                    <span style="background: var(--primary-color); color: white; font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 5px;">BOT</span>
+                                <% } %>
+                            </span>
+                            <span class="message-timestamp"><%= new Date(msg.timestamp).toLocaleString('fr-FR') %></span>
+                        </div>
+                        <div class="message-content">
+                            <% if (msg.content) { %>
+                                <%= msg.content %>
+                            <% } %>
+                            <% if (msg.attachments && msg.attachments.length > 0) { %>
+                                <div style="margin-top: 10px;">
+                                    <% msg.attachments.forEach(att => { %>
+                                        <a href="<%= att.url %>" target="_blank" style="color: var(--primary-color); display: block;">
+                                            📎 <%= att.name %>
+                                        </a>
+                                    <% }) %>
+                                </div>
+                            <% } %>
+                            <% if (msg.embeds && !msg.content && msg.attachments.length === 0) { %>
+                                <em style="color: var(--text-secondary);">[Embed]</em>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

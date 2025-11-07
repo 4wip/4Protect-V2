@@ -47,5 +47,3 @@ Les contributions sont acceptées faîtes un pull requests/issues
 ## Crédit
 - 4wip (Discord/([Github](https://github.com/4wip))
 - [Serveur Discord](https://discord.gg/26KgQQxMJ5)
-
-- miiloww_. (Discord/([Github](https://github.com/miiloww))

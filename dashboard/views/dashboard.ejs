@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - 4Protect V2</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>4Protect V2 - Dashboard</h1>
+            <div class="user-info">
+                <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="Avatar" class="user-avatar">
+                <span><strong><%= user.username %></strong></span>
+                <a href="/logout" class="btn btn-small btn-secondary">Déconnexion</a>
+            </div>
+        </header>
+
+        <main>
+            <h2>Vos Serveurs</h2>
+            <p class="subtitle">Sélectionnez un serveur pour le gérer</p>
+
+            <div class="guild-grid">
+                <% if (guilds && guilds.length > 0) { %>
+                    <% guilds.forEach(guild => { %>
+                        <% if ((BigInt(guild.permissions) & 0x20n) === 0x20n) { %>
+                            <a href="/dashboard/<%= guild.id %>" class="guild-card">
+                                <% if (guild.icon) { %>
+                                    <img src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png" alt="<%= guild.name %>">
+                                <% } else { %>
+                                    <div class="guild-icon-placeholder">
+                                        <%= guild.name.charAt(0).toUpperCase() %>
+                                    </div>
+                                <% } %>
+                                <h3><%= guild.name %></h3>
+                            </a>
+                        <% } %>
+                    <% }); %>
+                <% } else { %>
+                    <p class="no-guilds">Aucun serveur trouvé. Assurez-vous d'avoir les permissions de gestion sur au moins un serveur.</p>
+                <% } %>
+            </div>
+        </main>
+
+        <footer>
+            <p>4Protect V2 © 2024 - Powered by 4wip</p>
+        </footer>
+    </div>
+</body>
+</html>
