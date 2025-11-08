@@ -290,14 +290,14 @@ export default {
                                 const close = new ActionRowBuilder().addComponents(
                                         new ButtonBuilder()
                                                 .setCustomId('ticket_close')
-                                                .setLabel('🔒 Fermer le ticket')
+                                                .setLabel('Fermer le ticket')
                                                 .setStyle(ButtonStyle.Danger)
                                 );
                                 
                                 const container = new ContainerBuilder()
                                         .setAccentColor(parseInt(config.color.replace('#', ''), 16))
                                         .addTextDisplayComponents(
-                                                new TextDisplayBuilder().setContent(`## 🎫 Ticket - ${optiontxt}`)
+                                                new TextDisplayBuilder().setContent(`## Ticket - ${optiontxt}`)
                                         )
                                         .addSeparatorComponents(
                                                 new SeparatorBuilder()
@@ -305,7 +305,7 @@ export default {
                                                         .setDivider(true)
                                         )
                                         .addTextDisplayComponents(
-                                                new TextDisplayBuilder().setContent(`👋 Bonjour <@${interaction.user.id}> !`),
+                                                new TextDisplayBuilder().setContent(`Bonjour <@${interaction.user.id}> !`),
                                                 new TextDisplayBuilder().setContent(`Expliquez votre problème, un membre du staff va vous répondre rapidement.`)
                                         )
                                         .addSeparatorComponents(
