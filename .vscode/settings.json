@@ -1,0 +1,10 @@
+{
+	"javascript.preferences.importModuleSpecifierEnding": "js",
+	"typescript.preferences.importModuleSpecifierEnding": "js",
+	"editor.formatOnSave": true,
+	"editor.insertSpaces": false,
+	"editor.tabSize": 2,
+	"editor.detectIndentation": false,
+	"files.eol": "\n",
+	"discord.enabled": true
+}

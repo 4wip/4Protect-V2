@@ -1,11 +1,12 @@
-const { ActivityType } = require('discord.js');
+import { ActivityType } from "discord.js";
 
-module.exports = {
-  name: 'clientReady',
-  async execute(bot) {
-    await bot.application.commands.set(bot.arrayOfSlashCommands);
+export default {
+	name: 'clientReady',
+	async execute(bot) {
+		await bot.application.commands.set(bot.arrayOfSlashCommands);
 
-    bot.user.setPresence({
-      activities: [{ name: '4Protect V2', type: ActivityType.Streaming, url: 'https://twitch.tv/4wipyk'}], status: 'online'});
-  }
+		bot.user.setPresence({
+			activities: [{ name: '4Protect V2', type: ActivityType.Streaming, url: 'https://twitch.tv/4wipyk' }], status: 'online'
+		});
+	}
 };
