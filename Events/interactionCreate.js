@@ -184,12 +184,7 @@ export default {
 					name: `ticket-${interaction.user.username}`,
 					type: 0,
 					topic: `${optiontxt} - ${interaction.user.username}`,
-					parent: parent,
-					permissionOverwrites: [
-						{ id: interaction.guild.id, deny: ['ViewChannel'] },
-						{ id: interaction.user.id, allow: ['ViewChannel', 'SendMessages', 'AttachFiles'] },
-						{ id: interaction.client.user.id, allow: ['ViewChannel', 'SendMessages', 'ManageChannels'] },
-					],
+					parent: parent
 				});
 				db.run(
 					'INSERT INTO ticketchannel (channelId) VALUES (?)',
