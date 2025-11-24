@@ -162,9 +162,6 @@ export const command = {
 									if (err) {
 										return;
 									}
-									message.reply(
-										`La commande \`${command}\` a été ajoutée à la permission \`${permLevel}\``
-									);
 								}
 							);
 						}
