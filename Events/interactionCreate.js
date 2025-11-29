@@ -184,7 +184,13 @@ export default {
 					name: `ticket-${interaction.user.username}`,
 					type: 0,
 					topic: `${optiontxt} - ${interaction.user.username}`,
-					parent: parent
+					parent: parent,
+					    permissionOverwrites: [
+        {
+            id: interaction.user.id,
+            allow: ["ViewChannel"]
+        }
+    ],
 				});
 				db.run(
 					'INSERT INTO ticketchannel (channelId) VALUES (?)',
@@ -214,7 +220,7 @@ export default {
 					],
 					components: [close]
 				});
-				return interaction.reply({ content: `Votre ticket: ${ticketChannel}`, flags: 64 });
+				return interaction.reply({ content: `${ticketChannel}`, flags: 64 });
 			});
 		}
 	}
