@@ -188,7 +188,7 @@ export default {
 					    permissionOverwrites: [
         {
             id: interaction.user.id,
-            allow: ["ViewChannel"]
+            allow: ["ViewChannel", "SendMessages", "ReadMessageHistory"]
         }
     ],
 				});
