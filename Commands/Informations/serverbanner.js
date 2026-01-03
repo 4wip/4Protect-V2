@@ -1,119 +1,95 @@
 import { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
 import db from '../../Events/loadDatabase.js';
-import config from "../../config.json" with { type: 'json' }
+import config from "../../config.json" with { type: 'json' };
 
 export const command = {
-	name: 'serverbanner',
-	helpname: 'serverbanner',
-	description: "Affiche la bannière du serveur",
-	help: 'serveurbanner',
-	run: async (bot, message, args) => {
+    name: 'serverbanner',
+    helpname: 'serverbanner',
+    description: "Affiche la bannière du serveur",
+    help: 'serveurbanner',
+    run: async (bot, message, args) => {
 
-		const checkPerm = async (message, commandName) => {
-			if (config.owners.includes(message.author.id)) {
-				return true;
-			}
+        // --- Système de vérification des permissions ---
+        const checkPerm = async (message, commandName) => {
+            if (config.owners.includes(message.author.id)) return true;
 
-			const publicStatut = await new Promise((resolve, reject) => {
-				db.get('SELECT statut FROM public WHERE guild = ? AND statut = ?', [message.guild.id, 'on'], (err, row) => {
-					if (err) reject(err);
-					resolve(!!row);
-				});
-			});
+            const publicStatut = await new Promise((resolve) => {
+                db.get('SELECT statut FROM public WHERE guild = ? AND statut = ?', [message.guild.id, 'on'], (err, row) => {
+                    resolve(!!row);
+                });
+            });
 
-			if (publicStatut) {
+            if (publicStatut) {
+                const checkPublicCmd = await new Promise((resolve) => {
+                    db.get('SELECT command FROM cmdperm WHERE perm = ? AND command = ? AND guild = ?', ['public', commandName, message.guild.id], (err, row) => {
+                        resolve(!!row);
+                    });
+                });
+                if (checkPublicCmd) return true;
+            }
 
-				const checkPublicCmd = await new Promise((resolve, reject) => {
-					db.get(
-						'SELECT command FROM cmdperm WHERE perm = ? AND command = ? AND guild = ?',
-						['public', commandName, message.guild.id],
-						(err, row) => {
-							if (err) reject(err);
-							resolve(!!row);
-						}
-					);
-				});
+            try {
+                const checkUserWl = await new Promise((resolve) => {
+                    db.get('SELECT id FROM whitelist WHERE id = ?', [message.author.id], (err, row) => resolve(!!row));
+                });
+                if (checkUserWl) return true;
 
-				if (checkPublicCmd) {
-					return true;
-				}
-			}
+                const checkDbOwner = await new Promise((resolve) => {
+                    db.get('SELECT id FROM owner WHERE id = ?', [message.author.id], (err, row) => resolve(!!row));
+                });
+                if (checkDbOwner) return true;
 
-			try {
-				const checkUserWl = await new Promise((resolve, reject) => {
-					db.get('SELECT id FROM whitelist WHERE id = ?', [message.author.id], (err, row) => {
-						if (err) reject(err);
-						resolve(!!row);
-					});
-				});
+                const roles = message.member.roles.cache.map(role => role.id);
+                const permissions = await new Promise((resolve) => {
+                    db.all('SELECT perm FROM permissions WHERE id IN (' + roles.map(() => '?').join(',') + ') AND guild = ?', [...roles, message.guild.id], (err, rows) => {
+                        resolve(rows ? rows.map(row => row.perm) : []);
+                    });
+                });
 
-				if (checkUserWl) {
-					return true;
-				}
+                if (permissions.length === 0) return false;
 
-				const checkDbOwner = await new Promise((resolve, reject) => {
-					db.get('SELECT id FROM owner WHERE id = ?', [message.author.id], (err, row) => {
-						if (err) reject(err);
-						resolve(!!row);
-					});
-				});
+                const checkCmdPermLevel = await new Promise((resolve) => {
+                    db.all('SELECT command FROM cmdperm WHERE perm IN (' + permissions.map(() => '?').join(',') + ') AND guild = ?', [...permissions, message.guild.id], (err, rows) => {
+                        resolve(rows ? rows.map(row => row.command) : []);
+                    });
+                });
 
-				if (checkDbOwner) {
-					return true;
-				}
+                return checkCmdPermLevel.includes(commandName);
+            } catch (error) {
+                return false;
+            }
+        };
 
-				const roles = message.member.roles.cache.map(role => role.id);
+        if (!(await checkPerm(message, command.name))) {
+            const noacces = new EmbedBuilder()
+                .setDescription("Vous n'avez pas la permission d'utiliser cette commande")
+                .setColor(config.color);
+            return message.reply({ embeds: [noacces] }).then(m => setTimeout(() => m.delete().catch(() => {}), 2000));
+        }
 
-				const permissions = await new Promise((resolve, reject) => {
-					db.all('SELECT perm FROM permissions WHERE id IN (' + roles.map(() => '?').join(',') + ') AND guild = ?', [...roles, message.guild.id], (err, rows) => {
-						if (err) reject(err);
-						resolve(rows.map(row => row.perm));
-					});
-				});
+        const banner = message.guild.bannerURL({ size: 1024, dynamic: true });
 
-				if (permissions.length === 0) {
-					return false;
-				}
+        if (banner) {
+            const embed = new EmbedBuilder()
+                .setTitle(`Bannière - ${message.guild.name}`)
+                .setImage(banner)
+                .setColor(config.color);
 
-				const checkCmdPermLevel = await new Promise((resolve, reject) => {
-					db.all('SELECT command FROM cmdperm WHERE perm IN (' + permissions.map(() => '?').join(',') + ') AND guild = ?', [...permissions, message.guild.id], (err, rows) => {
-						if (err) reject(err);
-						resolve(rows.map(row => row.command));
-					});
-				});
+            const downloadButton = new ButtonBuilder()
+                .setLabel("Télécharger")
+                .setStyle(ButtonStyle.Link)
+                .setURL(banner);
 
-				return checkCmdPermLevel.includes(commandName);
-			} catch (error) {
-				console.error('Erreur lors de la vérification des permissions:', error);
-				return false;
-			}
-		};
+            const actionRow = new ActionRowBuilder().addComponents(downloadButton);
 
-		if (!(await checkPerm(message, command.name))) {
-			const noacces = new EmbedBuilder()
-				.setDescription("Vous n'avez pas la permission d'utiliser cette commande")
-				.setColor(config.color);
-			return message.reply({ embeds: [noacces], allowedMentions: { repliedUser: true } }).then(m => setTimeout(() => m.delete().catch(() => { }), 2000));
-		}
+            return message.reply({ embeds: [embed], components: [actionRow] });
+        } else {
+            // SI AUCUNE BANNIÈRE : On affiche le message d'erreur au lieu de crash
+            const errorEmbed = new EmbedBuilder()
+                .setDescription("❌ **Bannière non trouvée** pour ce serveur.")
+                .setColor(config.color);
 
-		const banner = message.guild.banner({ dynamic: true, size: 1024 });
-
-		if (banner) {
-			const embed = new EmbedBuilder()
-				.setTitle(`Bannière - ${message.guild.name}`)
-				.setImage(banner)
-				.setColor(config.color);
-
-			const downloadButton = new ButtonBuilder()
-				.setLabel("Télécharger")
-				.setStyle(ButtonStyle.Link)
-				.setURL(banner);
-
-			const actionRow = new ActionRowBuilder().addComponents(downloadButton);
-
-			return message.reply({ embeds: [embed], components: [actionRow], allowedMentions: { repliedUser: false } });
-		} else {
-			return message.reply({ content: 'Ce serveur n\'a pas de bannière.', allowedMentions: { repliedUser: false } });
-		}
-	},
-}
+            return message.reply({ embeds: [errorEmbed], allowedMentions: { repliedUser: false } });
+        }
+    },
+};
